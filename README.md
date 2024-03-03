@@ -4,6 +4,11 @@
 
 ### Using Docker
 
+* Docker version: `>= 25.0.2`
+
+* Please configure your **Docker Source** before deployment!
+  * you can configure it through `/etc/docker/daemon.json` in Linux.
+
 * Deploy
   ```
   git clone git@github.com:YXHXianYu/OP-Abstract-Warehouse-Management-System.git
