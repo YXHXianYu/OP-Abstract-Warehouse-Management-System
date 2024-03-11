@@ -8,7 +8,7 @@ WORKDIR /app
 COPY . ./
 
 # 使用 Maven 构建应用
-RUN ./mvnw clean package
+RUN ./mvnw -s ./settings.xml clean package
 
 # 指定运行时的端口
 EXPOSE 8080
