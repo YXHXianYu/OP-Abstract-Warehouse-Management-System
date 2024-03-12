@@ -1,5 +1,5 @@
 # 使用 OpenJDK 为基础镜像
-FROM openjdk:17-jdk-slim
+FROM maven:3.8.5-openjdk-17
 
 # 设置工作目录
 WORKDIR /app
@@ -8,7 +8,7 @@ WORKDIR /app
 COPY . ./
 
 # 使用 Maven 构建应用
-RUN ./mvnw clean package
+RUN mvn -s ./settings.xml clean package -X
 
 # 指定运行时的端口
 EXPOSE 8080
