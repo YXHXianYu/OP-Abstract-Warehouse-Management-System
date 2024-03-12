@@ -39,7 +39,7 @@ public class UserController {
     }
 
 
-    public class LoginRequest {
+    public static class LoginRequest {
         private String username;
         private String password;
 
@@ -67,15 +67,18 @@ public class UserController {
 
     @PostMapping("/login")
     @PermitAll
-    public JSONResult authenticateUser(@RequestBody LoginRequest loginRequest) {
-        User user = userRepository.findByUsername(loginRequest.getUsername());
+    public JSONResult authenticateUser(@RequestBody Map<String, Object> loginRequest) {
+        System.out.println(loginRequest.get("username"));
+        System.out.println(loginRequest.get("password"));
+        User user = userRepository.findByUsername((String)loginRequest.get("username"));
         if(user == null) {
-            return JSONResult.errorMsg("用户名为 " + loginRequest.getUsername() + " 的用户不存在！");
+            return JSONResult.errorMsg("用户名为 " + (String)loginRequest.get("username") + " 的用户不存在！");
         } else {
-            var rawPassword = loginRequest.getPassword();
+            var rawPassword = (String)loginRequest.get("password");
             var storedEncryptedPassword = user.getPassword();
-            if(rawPassword.equals(storedEncryptedPassword)) {
-                return JSONResult.errorMsg("用户输入的登陆密码不正确！");
+            System.out.println("in db:"+ storedEncryptedPassword);
+            if(!rawPassword.equals(storedEncryptedPassword)) {
+                return JSONResult.errorMsg("用户输入的登陆密码"+ user.getPassword() +"不正确！");
             } else {
                 //TODO: 添加token授予操作
                 return JSONResult.ok(user);
@@ -89,6 +92,10 @@ public class UserController {
         //TODO: add this password encoding logic here later when security is configured
 //        String encodedPassword = passwordEncoder.encode(user.getPassword());
 //        user.setPassword(encodedPassword);
+        System.out.println(user.getPassword());
+        System.out.println(user.getUsername());
+        System.out.println(user.getEmail());
+        System.out.println(user.getPhoneNumber());
         return JSONResult.ok(userRepository.save(user));
     }
 
