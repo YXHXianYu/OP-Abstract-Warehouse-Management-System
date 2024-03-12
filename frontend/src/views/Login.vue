@@ -157,7 +157,7 @@
                     :rules="rules"
                 >
                     <el-form-item label="Name" prop="name">
-                        <el-input v-model="loginForm.number" />
+                        <el-input v-model="loginForm.name" />
                     </el-form-item>
                     <el-form-item label="Password" prop="password">
                         <el-input v-model="loginForm.password" type="password"/>
@@ -193,30 +193,71 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
+import { ElNotification } from 'element-plus'
 import axios from 'axios'
+axios.defaults.baseURL = '/api'
 
-const isLogin = ref(true)
+let temp = true
+let isLogin = ref(temp);
 const formRef = ref<FormInstance>()
 const Login = (formEl: FormInstance | undefined) => {
   if (!formEl) return
-  axios.post('http://60.205.253.222:8080'+'/users/login', { "username":loginForm.name,"password": loginForm.password})
-  .then(function (response) {
-    alert(response);
+  axios.post('/users/login', { "username":loginForm.name,"password": loginForm.password})
+  .then(function (res) {
+    if(res.data.msg=='OK'){
+        ElNotification({
+            title: 'Success',
+            message: '登录成功',
+            type: 'success',
+        })
+    }
+    else{
+        ElNotification({
+            title: '登录失败',
+            message: res.data.msg,
+            type: 'error',
+        })
+        loginForm.password='';
+    }
   })
   .catch(function (error) {
-    alert(error);
+    ElNotification({
+        title: '网络错误',
+        message: error,
+        type: 'error',
+    })
   });
 }
 const Register = (formEl: FormInstance | undefined) => {
   if (!formEl) return
-  axios.post('http://60.205.253.222:8080'+'/users', 
+  axios.post('/users', 
   { "username":registerForm.name,"password": registerForm.password,
     "email":registerForm.email,"phoneNumber":registerForm.number})
-  .then(function (response) {
-    alert(response);
+  .then(function (res) {
+    if(res.data.msg=='OK'){
+        ElNotification({
+            title: 'Success',
+            message: '注册成功',
+            type: 'success',
+        })  
+        isLogin.value=true;
+        loginForm.name=registerForm.name;
+        loginForm.password=registerForm.password;
+    }
+    else{
+        ElNotification({
+            title: '注册错误',
+            message: res.data.data,
+            type: 'error',
+        })
+    }
   })
   .catch(function (error) {
-    alert(error);
+    ElNotification({
+        title: '网络错误',
+        message: error,
+        type: 'error',
+    })
   });
 }
 
