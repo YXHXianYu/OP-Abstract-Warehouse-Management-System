@@ -1,57 +1,31 @@
 package op.warehouse.backend.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "users")
-public class User {
 
-    @Setter
-    @Getter
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public interface User {
+    public Long getId();
+    public void setId(Long id);
 
-    @Setter
-    @Getter
-    @Column(length = 256, nullable = false, unique = true)
-    private String username;
-
-    @Setter
-    @Getter
-    @Column(length = 256, nullable = false)
-    private String email;
-
-    @Setter
-    @Getter
-    @Column(length = 32, nullable = false)
-    private String phoneNumber;
-
-    @Setter
-    @Getter
-    @Column(nullable = false)
-    private LocalDateTime registrationDate;
+    public String getUsername();
+    public void setUsername(String username);
 
 
-    @Setter
-    @Getter
-    @Column(length = 256, nullable = false)
-    private String password;
+    public String getEmail();
+    public void setEmail(String email);
 
 
-    public LocalDateTime getRegistrationDate() {
-        return registrationDate;
-    }
+    public String getPhoneNumber();
+    public void setPhoneNumber(String phoneNumber);
 
-    // Method to automatically set the registration date before persisting
-    @PrePersist
-    protected void onCreate() {
-        registrationDate = LocalDateTime.now();
-    }
+    public LocalDateTime getRegistrationDate();
+    public void setRegistrationDate(LocalDateTime dateTime);
+
+
+    public String getPassword();
+    public void setPassword(String password);
+
+    public RoleType getRoleType();
+
 }
 

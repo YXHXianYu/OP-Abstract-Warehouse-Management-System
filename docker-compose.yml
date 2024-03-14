@@ -16,16 +16,16 @@ services:
     ports:
       - "5173:5173"
 
-  db:
-    image: mysql:8.0.35
-    ports:
-      - "3306:3306"
-    environment:
-      - MYSQL_DATABASE=op
-      - MYSQL_ROOT_PASSWORD=woc,o
-    volumes:
-      - db-data:/var/lib/mysql
-      - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
-
-volumes:
-  db-data:
+#  db:
+#    image: mysql:8.0.35
+#    ports:
+#      - "3306:3306"
+#    environment:
+#      - MYSQL_DATABASE=op
+#      - MYSQL_ROOT_PASSWORD=woc,o
+#    volumes:
+#      - db-data:/var/lib/mysql
+#      - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+#
+#volumes:
+#  db-data:
