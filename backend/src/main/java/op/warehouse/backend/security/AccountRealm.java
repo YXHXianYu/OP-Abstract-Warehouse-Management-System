@@ -2,6 +2,7 @@ package op.warehouse.backend.security;
 
 import io.jsonwebtoken.Claims;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import op.warehouse.backend.dto.ResponseCodeEnum;
 import op.warehouse.backend.entity.RoleType;
 import op.warehouse.backend.entity.User;
@@ -20,6 +21,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Component
+@Slf4j
 public class AccountRealm extends AuthorizingRealm {
     @Resource
     private JwtUtil jwtUtil;
@@ -45,7 +47,7 @@ public class AccountRealm extends AuthorizingRealm {
         String jwt = (String) authenticationToken.getCredentials();
         // 获取jwt中关于用户名
         String username = (String) jwtUtil.getClaimsByToken(jwt).get("username");
-        RoleType roleType = (RoleType)  jwtUtil.getClaimsByToken(jwt).get("roletype");
+        RoleType roleType = RoleType.valueOf((String)  jwtUtil.getClaimsByToken(jwt).get("roletype"));
         // 查询用户
         User user = userService.getUserByUsername(roleType, username);
         if (user == null) {
@@ -64,11 +66,13 @@ public class AccountRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
+        log.info("获取角色权限");
         User user = (User) principalCollection.iterator().next();
         Set<String> roles = new HashSet<>();
         roles.add(user.getRoleType().toString());
 
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
+        log.info(roles.toString());
         info.setRoles(roles);
         return info;
     }
