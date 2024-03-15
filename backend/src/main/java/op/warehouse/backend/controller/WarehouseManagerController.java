@@ -35,6 +35,18 @@ public class WarehouseManagerController {
     @Autowired
     private JwtUtil jwtUtil;
 
+    private static ResultDTO getReadOthersResultDTO(Long id) {
+        // 获取当前 Subject
+        Subject subject = SecurityUtils.getSubject();
+        // 获取已认证的 Principal（用户对象）
+        User authUser = (User) subject.getPrincipal();
+        // 判断id是否合法
+        if(!id.equals(authUser.getId())) {
+            return ResultDTO.error(ResponseCodeEnum.UNAUTHORIZED, "Not permitted to check other's information");
+        }
+        return null;
+    }
+
 
     // 查询所有用户
     @GetMapping
@@ -47,14 +59,8 @@ public class WarehouseManagerController {
     @GetMapping("/{id}")
     @RequiresRoleType(RoleType.WAREHOUSE_MANAGER)
     public ResultDTO getUserById(@PathVariable Long id) {
-        // 获取当前 Subject
-        Subject subject = SecurityUtils.getSubject();
-        // 获取已认证的 Principal（用户对象）
-        User authUser = (User) subject.getPrincipal();
-        // 判断id是否合法
-        if(!id.equals(authUser.getId())) {
-            return ResultDTO.error(ResponseCodeEnum.UNAUTHORIZED, "Not permitted to check other's information");
-        }
+        ResultDTO UNAUTHORIZED = getReadOthersResultDTO(id);
+        if (UNAUTHORIZED != null) return UNAUTHORIZED;
         Optional<WarehouseManager> user = warehouseManagerRepository.findById(id);
         System.out.println(user);
         if(user.isPresent()) {
@@ -63,6 +69,8 @@ public class WarehouseManagerController {
             return ResultDTO.error(ResponseCodeEnum.NOT_FOUND, "id 为 " + id + " 的用户不存在！");
         }
     }
+
+
 
     @PostMapping("/login")
     @PermitAll
@@ -103,6 +111,8 @@ public class WarehouseManagerController {
     @PutMapping("/{id}")
     @RequiresRoleType(RoleType.WAREHOUSE_MANAGER)
     public ResultDTO updateUser(@PathVariable Long id, @RequestBody WarehouseManager userDetails) {
+        ResultDTO UNAUTHORIZED = getReadOthersResultDTO(id);
+        if (UNAUTHORIZED != null) return UNAUTHORIZED;
         Optional<WarehouseManager> userOptional = warehouseManagerRepository.findById(id);
 
         if(userOptional.isPresent()) {
@@ -127,6 +137,8 @@ public class WarehouseManagerController {
     @PatchMapping("/{id}")
     @RequiresRoleType(RoleType.WAREHOUSE_MANAGER)
     public ResultDTO updateUserPartially(@PathVariable Long id, @RequestBody Map<String, Object> updates) {
+        ResultDTO UNAUTHORIZED = getReadOthersResultDTO(id);
+        if (UNAUTHORIZED != null) return UNAUTHORIZED;
         Optional<WarehouseManager> optionalUser = warehouseManagerRepository.findById(id);
 
         if(optionalUser.isPresent()) {
@@ -160,6 +172,8 @@ public class WarehouseManagerController {
     @DeleteMapping("/{id}")
     @RequiresRoleType(RoleType.WAREHOUSE_MANAGER)
     public ResultDTO deleteUser(@PathVariable Long id) {
+        ResultDTO UNAUTHORIZED = getReadOthersResultDTO(id);
+        if (UNAUTHORIZED != null) return UNAUTHORIZED;
         Optional<WarehouseManager> optionalUser = warehouseManagerRepository.findById(id);
         if(optionalUser.isPresent()) {
             warehouseManagerRepository.deleteById(id);
