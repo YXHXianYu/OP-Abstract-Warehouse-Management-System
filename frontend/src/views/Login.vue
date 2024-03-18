@@ -195,21 +195,28 @@ import { reactive, ref } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import { ElNotification } from 'element-plus'
 import axios from 'axios'
+import { useRouter } from 'vue-router';
+
 axios.defaults.baseURL = '/api'
 
+const router = useRouter();
 let temp = true
 let isLogin = ref(temp);
 const formRef = ref<FormInstance>()
 const Login = (formEl: FormInstance | undefined) => {
   if (!formEl) return
-  axios.post('/users/login', { "username":loginForm.name,"password": loginForm.password})
+  axios.post('/users/login', { "username":loginForm.name,"password": loginForm.password,"role":"WAREHOUSE_MANAGER"})
   .then(function (res) {
-    if(res.data.msg=='OK'){
+    if(res.data.message=='ok'){
         ElNotification({
             title: 'Success',
             message: '登录成功',
             type: 'success',
         })
+        //token存入
+        window.localStorage.setItem("optoken",res.data.data.token)
+        //跳转
+        router.push("/home");
     }
     else{
         ElNotification({
@@ -230,11 +237,11 @@ const Login = (formEl: FormInstance | undefined) => {
 }
 const Register = (formEl: FormInstance | undefined) => {
   if (!formEl) return
-  axios.post('/users', 
+  axios.post('/warehouse-manager', 
   { "username":registerForm.name,"password": registerForm.password,
     "email":registerForm.email,"phoneNumber":registerForm.number})
   .then(function (res) {
-    if(res.data.msg=='OK'){
+    if(res.data.message=='ok'){
         ElNotification({
             title: 'Success',
             message: '注册成功',
