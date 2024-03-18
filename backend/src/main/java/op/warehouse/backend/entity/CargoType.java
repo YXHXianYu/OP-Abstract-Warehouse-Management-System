@@ -5,9 +5,11 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Getter
 @Entity
@@ -38,8 +40,27 @@ public class CargoType {
         map.put("id", this.id);
         map.put("name", this.name);
         map.put("description", this.description);
-        map.put("fatherType", this.fatherType);
-        map.put("childrenTypes", this.childrenTypes);
+        List<Long> children = null;
+        if(childrenTypes != null){
+            children = childrenTypes.stream().map(CargoType::getId).toList();
+        }
+        map.put("fatherType", this.fatherType==null ? null : this.fatherType.getId());
+        map.put("childrenTypes", children);
+        return map;
+    }
+    public Map<String, Object> toMapRecursively() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", this.id);
+        map.put("name", this.name);
+        map.put("description", this.description);
+        List<Map<String, Object>> children = null;
+        if(!(this.childrenTypes == null) && !(this.childrenTypes.isEmpty())) {
+            children = new ArrayList<>();
+            for(CargoType type : this.childrenTypes) {
+                children.add(type.toMapRecursively());
+            }
+        }
+        map.put("childrenTypes", children);
         return map;
     }
 }

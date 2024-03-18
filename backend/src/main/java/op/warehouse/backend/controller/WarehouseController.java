@@ -4,6 +4,7 @@ import op.warehouse.backend.annotation.RequiresRoleType;
 import op.warehouse.backend.dto.ResponseCodeEnum;
 import op.warehouse.backend.dto.ResultDTO;
 import op.warehouse.backend.entity.*;
+import op.warehouse.backend.repository.CargoTypeRepository;
 import op.warehouse.backend.repository.WarehouseAreaRepository;
 import op.warehouse.backend.repository.WarehouseManagerRepository;
 import op.warehouse.backend.repository.WarehouseRepository;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -28,25 +30,8 @@ public class WarehouseController {
     @Autowired
     WarehouseAreaRepository warehouseAreaRepository;
 
-    private Warehouse findWarehouseById(Long id) {
-        return warehouseRepository.findById(id).orElse(null);
-    }
-
-    private ResultDTO getReadOthersResultDTO(Long id) {
-        // 获取当前 Subject
-        Subject subject = SecurityUtils.getSubject();
-        // 获取已认证的 Principal（用户对象）
-        WarehouseManager manager = (WarehouseManager) subject.getPrincipal();
-        Warehouse warehouse = warehouseRepository.findById(id).orElse(null);
-        if (warehouse == null) {
-            return ResultDTO.error(ResponseCodeEnum.NOT_FOUND, "Cannot find warehouse with id " + id);
-        }
-        // 判断id是否合法
-        if(!manager.getWarehouse().contains(warehouse)) {
-            return ResultDTO.error(ResponseCodeEnum.UNAUTHORIZED, "Not permitted to check others' warehouses' information");
-        }
-        return null;
-    }
+    @Autowired
+    CargoTypeRepository cargoTypeRepository;
 
     @GetMapping
     @RequiresRoleType(RoleType.WAREHOUSE_MANAGER)
@@ -58,6 +43,7 @@ public class WarehouseController {
 
     @GetMapping("/{id}")
     @RequiresRoleType(RoleType.WAREHOUSE_MANAGER)
+    @Transactional(rollbackFor = Exception.class)
     public ResultDTO getWarehouseById(@PathVariable Long id) {
         ResultDTO unauthorized = SecurityUtilities.getReadOthersResultDTO(id);
         if (unauthorized != null) return unauthorized;
@@ -70,6 +56,7 @@ public class WarehouseController {
 
     @PostMapping
     @RequiresRoleType(RoleType.WAREHOUSE_MANAGER)
+    @Transactional(rollbackFor = Exception.class)
     public ResultDTO createWarehouse(@RequestBody Warehouse warehouse) {
         WarehouseManager manager = (WarehouseManager) SecurityUtilities.getAuthUser();
         warehouse.setManager(manager);
@@ -82,6 +69,7 @@ public class WarehouseController {
      */
     @GetMapping("/{id}/areas")
     @RequiresRoleType(RoleType.WAREHOUSE_MANAGER)
+    @Transactional(rollbackFor = Exception.class)
     public ResultDTO getAreas(@PathVariable Long id) {
         ResultDTO unauthorized = SecurityUtilities.getReadOthersResultDTO(id);
         if (unauthorized != null) return unauthorized;
@@ -94,6 +82,7 @@ public class WarehouseController {
 
     @GetMapping("/{id}/areas/{areaId}")
     @RequiresRoleType(RoleType.WAREHOUSE_MANAGER)
+    @Transactional(rollbackFor = Exception.class)
     public ResultDTO getSingleAreas(@PathVariable Long id, @PathVariable Long areaId) {
         ResultDTO unauthorized = SecurityUtilities.getReadOthersResultDTO(id);
         if (unauthorized != null) return unauthorized;
@@ -112,14 +101,37 @@ public class WarehouseController {
 
     @PostMapping("/{id}/areas")
     @RequiresRoleType(RoleType.WAREHOUSE_MANAGER)
-    public ResultDTO createAreas(@PathVariable Long id, @RequestBody WarehouseArea area) {
+    @Transactional(rollbackFor = Exception.class)
+    public ResultDTO createAreas(@PathVariable Long id, @RequestBody Map<String, Object> body) {
         ResultDTO unauthorized = SecurityUtilities.getReadOthersResultDTO(id);
         if (unauthorized != null) return unauthorized;
         Warehouse warehouse = warehouseRepository.findById(id).orElse(null);
         if (warehouse == null) {
             return ResultDTO.error(ResponseCodeEnum.NOT_FOUND, "Cannot find warehouse with id " + id);
         }
+        if(!body.containsKey("cargoType")) {
+            return ResultDTO.error(ResponseCodeEnum.NOT_ACCEPTABLE, "Cannot create a warehouse area without providing cargo-type's id");
+        }
+        if(!body.containsKey("name") || !body.containsKey("description") || !body.containsKey("capacity")) {
+            return ResultDTO.error(ResponseCodeEnum.NOT_ACCEPTABLE, "There's(re) required field(s) amongst name, description or capacity that is(are) lack in the request body");
+        }
+        Long cargoId = ((Integer)body.get("cargoType")).longValue();
+        Long capacity = ((Integer)body.get("capacity")).longValue();
+        String name = (String) body.get("name");
+        String description = (String) body.get("description");
+
+        var cargoTypeQuery = cargoTypeRepository.findById(cargoId);
+        if(cargoTypeQuery.isEmpty()) {
+            return ResultDTO.error(ResponseCodeEnum.NOT_FOUND, "Cannot find cargo-type with id " + cargoId);
+        }
+        WarehouseArea area = new WarehouseArea();
+
         area.setWarehouse(warehouse);
+        area.setCargoType(cargoTypeQuery.get());
+        area.setName(name);
+        area.setDescription(description);
+        area.setCapacity(capacity);
+
         warehouse.getWarehouseAreas().add(area);
         warehouseAreaRepository.save(area);
         warehouseRepository.save(warehouse);

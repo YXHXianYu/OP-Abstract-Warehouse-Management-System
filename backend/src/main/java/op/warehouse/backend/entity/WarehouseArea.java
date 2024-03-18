@@ -42,7 +42,7 @@ public class WarehouseArea {
         map.put("name", this.name);
         map.put("description", this.description);
         map.put("capacity", this.capacity);
-        map.put("cargoType", this.cargoType.getId());
+        map.put("cargoType", this.cargoType.toMap());
         map.put("warehouse", this.warehouse.getId());
         return map;
     }
