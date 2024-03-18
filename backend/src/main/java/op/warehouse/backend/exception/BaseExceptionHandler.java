@@ -1,5 +1,6 @@
 package op.warehouse.backend.exception;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import op.warehouse.backend.dto.ResponseCodeEnum;
@@ -66,4 +67,11 @@ public class BaseExceptionHandler {
         return ResultDTO.error(ResponseCodeEnum.ERROR, e);
     }
 
+    @ExceptionHandler(EntityNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResultDTO handlerEntityNotFoundException(EntityNotFoundException e) {
+        log.error("找不到实体：" + e);
+
+        return ResultDTO.error(ResponseCodeEnum.NOT_FOUND, "Cannot find requested resources, because: " + e.getMessage());
+    }
 }

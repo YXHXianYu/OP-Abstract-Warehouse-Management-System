@@ -28,6 +28,7 @@ spring:
     hibernate:
       ddl-auto: update
       naming_strategy: org.hibernate.cfg.ImprovedNamingStrategy
+    open-in-view: true
 
 
 
