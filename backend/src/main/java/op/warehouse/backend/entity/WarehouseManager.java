@@ -1,10 +1,12 @@
 package op.warehouse.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Entity
@@ -38,6 +40,11 @@ public class WarehouseManager implements User{
 
     @Column(length = 256, nullable = false)
     private String password;
+
+    @OneToMany(fetch=FetchType.EAGER)
+    @JoinColumn(name = "manager_id")
+    @JsonIgnore
+    private List<Warehouse> warehouse;
 
     // Method to automatically set the registration date before persisting
     @PrePersist
