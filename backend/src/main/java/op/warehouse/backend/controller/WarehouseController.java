@@ -33,6 +33,19 @@ public class WarehouseController {
     @Autowired
     CargoTypeRepository cargoTypeRepository;
 
+    private ResultDTO getReadOthersResultDTO(Long id) {
+        WarehouseManager manager = (WarehouseManager) SecurityUtilities.getAuthUser();
+        Optional<Warehouse> warehouseQuery = warehouseRepository.findById(id);
+        if(!warehouseQuery.isPresent()) {
+            return ResultDTO.error("Warehouse with id " + id + " is not presented");
+        }
+        Warehouse warehouse = warehouseQuery.get();
+        if(warehouse.getManager().getId() != manager.getId()) {
+            return ResultDTO.error(("Not permitted to access other manager's warehouse(s)"));
+        }
+        return null;
+    }
+
     @GetMapping
     @RequiresRoleType(RoleType.WAREHOUSE_MANAGER)
     @Transactional(rollbackFor = Exception.class)
@@ -45,7 +58,7 @@ public class WarehouseController {
     @RequiresRoleType(RoleType.WAREHOUSE_MANAGER)
     @Transactional(rollbackFor = Exception.class)
     public ResultDTO getWarehouseById(@PathVariable Long id) {
-        ResultDTO unauthorized = SecurityUtilities.getReadOthersResultDTO(id);
+        ResultDTO unauthorized = getReadOthersResultDTO(id);
         if (unauthorized != null) return unauthorized;
         Warehouse warehouse = warehouseRepository.findById(id).orElse(null);
         if (warehouse == null) {
@@ -71,7 +84,7 @@ public class WarehouseController {
     @RequiresRoleType(RoleType.WAREHOUSE_MANAGER)
     @Transactional(rollbackFor = Exception.class)
     public ResultDTO getAreas(@PathVariable Long id) {
-        ResultDTO unauthorized = SecurityUtilities.getReadOthersResultDTO(id);
+        ResultDTO unauthorized = getReadOthersResultDTO(id);
         if (unauthorized != null) return unauthorized;
         Warehouse warehouse = warehouseRepository.findById(id).orElse(null);
         if (warehouse == null) {
@@ -84,7 +97,7 @@ public class WarehouseController {
     @RequiresRoleType(RoleType.WAREHOUSE_MANAGER)
     @Transactional(rollbackFor = Exception.class)
     public ResultDTO getSingleAreas(@PathVariable Long id, @PathVariable Long areaId) {
-        ResultDTO unauthorized = SecurityUtilities.getReadOthersResultDTO(id);
+        ResultDTO unauthorized = getReadOthersResultDTO(id);
         if (unauthorized != null) return unauthorized;
         Warehouse warehouse = warehouseRepository.findById(id).orElse(null);
         if (warehouse == null) {
@@ -103,7 +116,7 @@ public class WarehouseController {
     @RequiresRoleType(RoleType.WAREHOUSE_MANAGER)
     @Transactional(rollbackFor = Exception.class)
     public ResultDTO createAreas(@PathVariable Long id, @RequestBody Map<String, Object> body) {
-        ResultDTO unauthorized = SecurityUtilities.getReadOthersResultDTO(id);
+        ResultDTO unauthorized = getReadOthersResultDTO(id);
         if (unauthorized != null) return unauthorized;
         Warehouse warehouse = warehouseRepository.findById(id).orElse(null);
         if (warehouse == null) {
