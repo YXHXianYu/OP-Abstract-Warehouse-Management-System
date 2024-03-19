@@ -2,9 +2,10 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Login from '../views/Login.vue'
 import Base from '../views/Base.vue'
 import Home from '../components/Home.vue'
-import Ware from '../components/Home.vue'
+import Ware from '../components/Ware.vue'
 import Area from '../components/Area.vue'
 import Self from '../components/Self.vue'
+import Cargo from '../components/Cargo.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -38,6 +39,11 @@ const router = createRouter({
           path: '/self',
           name: '/self',
           component: Self
+        },
+        {
+          path: '/cargo',
+          name: '/cargo',
+          component: Cargo
         },
       ]
     },
