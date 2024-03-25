@@ -26,7 +26,7 @@
                 <el-dialog v-model="dialogFormVisible" title="新建库区" width="500">
                     <el-form :model="form" label-width="auto" style="max-width: 600px">
                         <el-form-item label="name:">
-                            <el-input v-model="form.name" />
+                            <el-input v-model="form.name"/>
                         </el-form-item>
                         <el-form-item label="description:">
                             <el-input v-model="form.description" />
