@@ -80,8 +80,8 @@
                 </el-header>
                 <el-main>
                     <el-tabs
+                        type="border-card"
                         v-model="editableTabsValue"
-                        type="card"
                         class="demo-tabs"
                         closable
                         @tab-remove="removeTab"
