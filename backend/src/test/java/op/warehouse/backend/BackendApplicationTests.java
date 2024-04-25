@@ -1,7 +1,6 @@
 package op.warehouse.backend;
 
 import com.alibaba.fastjson.TypeReference;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -424,7 +423,7 @@ class BackendApplicationTests {
 		}
 		// 更新InOutOrder状态 未分配->分配中
 		{
-			MvcResult mvcResult = mockMvc.perform(put("/in-out-orders/" + inOutOrderId)
+			mockMvc.perform(put("/in-out-orders/" + inOutOrderId)
 							.contentType(MediaType.APPLICATION_JSON)
 							.header("Authorization", userInfo.token)
 							.content(JSON.toJSONString(new HashMap<>() {{
@@ -438,12 +437,11 @@ class BackendApplicationTests {
 					.andExpect(jsonPath("$.data.createdTime").isNotEmpty())
 					.andExpect(jsonPath("$.data.createdUser").isNotEmpty())
 					.andExpect(jsonPath("$.data.state").value(1))
-					.andExpect(jsonPath("$.data.id").value(inOutOrderId))
-					.andReturn();
+					.andExpect(jsonPath("$.data.id").value(inOutOrderId));
 		}
 		// 更新InOutOrder状态 1->2 未处理->处理中
 		{
-			MvcResult mvcResult = mockMvc.perform(put("/in-out-orders/" + inOutOrderId)
+			mockMvc.perform(put("/in-out-orders/" + inOutOrderId)
 							.contentType(MediaType.APPLICATION_JSON)
 							.header("Authorization", userInfo.token)
 							.content(JSON.toJSONString(new HashMap<>() {{
@@ -457,12 +455,11 @@ class BackendApplicationTests {
 					.andExpect(jsonPath("$.data.createdTime").isNotEmpty())
 					.andExpect(jsonPath("$.data.createdUser").isNotEmpty())
 					.andExpect(jsonPath("$.data.state").value(2))
-					.andExpect(jsonPath("$.data.id").value(inOutOrderId))
-					.andReturn();
+					.andExpect(jsonPath("$.data.id").value(inOutOrderId));
 		}
 		// 更新InOutOrder状态 2->3 处理中->已完成
 		{
-			MvcResult mvcResult = mockMvc.perform(put("/in-out-orders/" + inOutOrderId)
+			mockMvc.perform(put("/in-out-orders/" + inOutOrderId)
 							.contentType(MediaType.APPLICATION_JSON)
 							.header("Authorization", userInfo.token)
 							.content(JSON.toJSONString(new HashMap<>() {{
@@ -476,8 +473,7 @@ class BackendApplicationTests {
 					.andExpect(jsonPath("$.data.createdTime").isNotEmpty())
 					.andExpect(jsonPath("$.data.createdUser").isNotEmpty())
 					.andExpect(jsonPath("$.data.state").value(3))
-					.andExpect(jsonPath("$.data.id").value(inOutOrderId))
-					.andReturn();
+					.andExpect(jsonPath("$.data.id").value(inOutOrderId));
 		}
 		// 删除InOutOrder
 		{
@@ -489,10 +485,11 @@ class BackendApplicationTests {
 
 
 	/**
-	 * 测试了以下内容: /users/login, /warehouse-manager(post, get, delete)
+	 * 第一个 Test Case
+	 * User Register & Login Test Case
 	 */
 	@Test
-	void loginTest() throws Exception {
+	void userRegisterLoginTestCase() throws Exception {
 		UserInfo user_info = registerTestUser();
 		deleteTestUser(user_info);
 		{
@@ -512,10 +509,39 @@ class BackendApplicationTests {
 	}
 
 	/**
-	 * 测试了以下内容: 创建/查询/删除 CargoClass/CargoItem/InOutOrder
+	 * 第二个 Test Case
+	 * Cargo Class Test Case
 	 */
 	@Test
-	void inOutOrderTest() throws Exception {
+	void cargoClassTestCase() throws Exception {
+		UserInfo userInfo = registerTestUser();
+		ArrayList<Integer> cargoClassIds = createCargoClass(userInfo);
+
+		deleteCargoClass(userInfo, cargoClassIds);
+		deleteTestUser(userInfo);
+	}
+
+	/**
+	 * 第三个 Test Case
+	 * Cargo Item Test Case
+	 */
+	@Test
+	void cargoItemTestCase() throws Exception {
+		UserInfo userInfo = registerTestUser();
+		ArrayList<Integer> cargoClassIds = createCargoClass(userInfo);
+		ArrayList<Integer> cargoItemIds = createCargoItem(userInfo, cargoClassIds);
+
+		deleteCargoItem(userInfo, cargoItemIds);
+		deleteCargoClass(userInfo, cargoClassIds);
+		deleteTestUser(userInfo);
+	}
+
+	/**
+	 * 第四个 Test Case
+	 * In Out Order Test Case
+	 */
+	@Test
+	void inOutOrderTestCase() throws Exception {
 		UserInfo userInfo = registerTestUser();
 		ArrayList<Integer> cargoClassIds = createCargoClass(userInfo);
 		ArrayList<Integer> cargoItemIds = createCargoItem(userInfo, cargoClassIds);
