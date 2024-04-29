@@ -1,12 +1,16 @@
 package op.warehouse.backend.entity;
 
+import cn.hutool.core.date.DateTime;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Entity
@@ -50,5 +54,15 @@ public class WarehouseManager implements User{
     @PrePersist
     protected void onCreate() {
         registrationDate = LocalDateTime.now();
+    }
+
+    public Map<String, Object> toMap() {
+        Map<String, Object> result = new HashMap<>();
+        result.put("id", this.id);
+        result.put("username", this.username);
+        result.put("email", this.email);
+        result.put("phoneNumber", this.phoneNumber);
+        result.put("registrationDate", this.registrationDate.toInstant(ZoneOffset.UTC).toEpochMilli());
+        return result;
     }
 }

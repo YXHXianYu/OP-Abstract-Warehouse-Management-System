@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import op.warehouse.backend.repository.WarehouseManagerRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +40,10 @@ public class Warehouse {
     @JoinColumn(name = "area_to_warehouse")
     @JsonIgnore
     private List<WarehouseArea> warehouseAreas;
+
+    @OneToMany(fetch = FetchType.EAGER)
+
+    private List<InOutOrder> inOutOrders;
 
     public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();

@@ -1,16 +1,15 @@
 package op.warehouse.backend.controller;
 
+import lombok.Getter;
+import lombok.Setter;
 import op.warehouse.backend.annotation.RequiresRoleType;
 import op.warehouse.backend.dto.ResponseCodeEnum;
 import op.warehouse.backend.dto.ResultDTO;
 import op.warehouse.backend.entity.*;
 import op.warehouse.backend.repository.CargoTypeRepository;
 import op.warehouse.backend.repository.WarehouseAreaRepository;
-import op.warehouse.backend.repository.WarehouseManagerRepository;
 import op.warehouse.backend.repository.WarehouseRepository;
 import op.warehouse.backend.util.SecurityUtilities;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +31,31 @@ public class WarehouseController {
 
     @Autowired
     CargoTypeRepository cargoTypeRepository;
+
+    @Getter
+    @Setter
+    private class WarehouseAuthorizationDTO {
+        private WarehouseManager manager;
+        private ResultDTO result = null;
+        private Warehouse warehouse;
+    }
+
+    private WarehouseAuthorizationDTO getAuthorizedWarehouse(Long id) {
+        WarehouseAuthorizationDTO result = new WarehouseAuthorizationDTO();
+        User user = SecurityUtilities.getAuthUser();
+        if(!(user instanceof WarehouseManager manager)) {
+            result.setResult(ResultDTO.error(ResponseCodeEnum.UNAUTHORIZED, "API can only be accessed by WAREHOUSE_MANAGER role"));
+            return result;
+        }
+        result.setManager(manager);
+        var warehouseQuery = warehouseRepository.findById(id);
+        if(!warehouseQuery.isPresent()){
+            result.setResult(ResultDTO.error(ResponseCodeEnum.NOT_FOUND, "Cannot find warehouse with id " + id));
+            return result;
+        }
+        result.setWarehouse(warehouseQuery.get());
+        return result;
+    }
 
     private ResultDTO getReadOthersResultDTO(Long id) {
         WarehouseManager manager = (WarehouseManager) SecurityUtilities.getAuthUser();
@@ -75,6 +99,21 @@ public class WarehouseController {
         warehouse.setManager(manager);
         return ResultDTO.success(warehouseRepository.save(warehouse));
     }
+
+    /*
+        INBOUND
+     */
+    @GetMapping("/{id}/inbounds")
+    @RequiresRoleType(RoleType.WAREHOUSE_MANAGER)
+    @Transactional(rollbackFor = Exception.class)
+    public ResultDTO listInbounds(@PathVariable Long id) {
+        var authResult = getAuthorizedWarehouse(id);
+        if (authResult.getResult() != null) return authResult.getResult();
+        var warehouse = authResult.getWarehouse();
+        var inboundList = warehouse.getInOutOrders();
+        return ResultDTO.success(inboundList);
+    }
+
 
 
     /*
