@@ -134,14 +134,14 @@ class BackendApplicationTests {
 								{
 									put("name", "TestCargoClass");
 									put("description", "TestDescription");
-									put("cargoTypeId", 14);
+									put("cargoTypeId", 3);
 								}
 							})))
 					.andExpect(status().isOk())
 					.andExpect(jsonPath("$.code").value(200))
 					.andExpect(jsonPath("$.data.name").value("TestCargoClass"))
 					.andExpect(jsonPath("$.data.description").value("TestDescription"))
-					.andExpect(jsonPath("$.data.cargoTypeId").value(14))
+					.andExpect(jsonPath("$.data.cargoTypeId").value(3))
 					.andReturn();
 			cargoClassId1 = Integer.parseInt(JSON.parseObject(mvcResult.getResponse().getContentAsString()).getJSONObject("data").get("id").toString());
 		}
@@ -154,14 +154,14 @@ class BackendApplicationTests {
 								{
 									put("name", "TestCargoClass2");
 									put("description", "TestDescription2");
-									put("cargoTypeId", 14);
+									put("cargoTypeId", 3);
 								}
 							})))
 					.andExpect(status().isOk())
 					.andExpect(jsonPath("$.code").value(200))
 					.andExpect(jsonPath("$.data.name").value("TestCargoClass2"))
 					.andExpect(jsonPath("$.data.description").value("TestDescription2"))
-					.andExpect(jsonPath("$.data.cargoTypeId").value(14))
+					.andExpect(jsonPath("$.data.cargoTypeId").value(3))
 					.andReturn();
 			cargoClassId2 = Integer.parseInt(JSON.parseObject(result.getResponse().getContentAsString()).getJSONObject("data").get("id").toString());
 		}
@@ -173,7 +173,7 @@ class BackendApplicationTests {
 					.andExpect(jsonPath("$.code").value(200))
 					.andExpect(jsonPath("$.data.name").value("TestCargoClass2"))
 					.andExpect(jsonPath("$.data.description").value("TestDescription2"))
-					.andExpect(jsonPath("$.data.cargoTypeId").value(14))
+					.andExpect(jsonPath("$.data.cargoTypeId").value(3))
 					.andExpect(jsonPath("$.data.id").value(cargoClassId2));
 		}
 		// 查询所有CargoClass
