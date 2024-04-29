@@ -5,11 +5,9 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/op
+      - SPRING_DATASOURCE_URL=jdbc:mysql://121.40.90.193:3306/prod_database
       - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=woc,o
-    depends_on:
-      - db
+      - SPRING_DATASOURCE_PASSWORD=MySQL_2024JACKY
 
   frontend:
     build: ./frontend
