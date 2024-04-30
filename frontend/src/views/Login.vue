@@ -215,6 +215,8 @@ const Login = (formEl: FormInstance | undefined) => {
         })
         //token存入
         window.localStorage.setItem("optoken",res.data.data.token)
+        window.localStorage.setItem("opID",res.data.data.user.id);
+        // window.localStorage.setItem("opID","15");
         //跳转
         router.push("/home");
     }

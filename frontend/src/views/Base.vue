@@ -45,6 +45,7 @@
                         </template>
                         <el-menu-item index="ware">{{ table['ware'] }}</el-menu-item>
                         <el-menu-item index="area">{{ table['area'] }}</el-menu-item>
+                        <el-menu-item index="stock">{{ table['stock'] }}</el-menu-item>
                     </el-sub-menu>
                     <el-sub-menu index="物料管理">
                         <template #title>
@@ -52,7 +53,14 @@
                             <span>物料管理</span>
                         </template>
                         <el-menu-item index="cargo">{{ table['cargo'] }}</el-menu-item>
-                        <el-menu-item index="">预留</el-menu-item>
+                        <el-menu-item index="goods">{{ table['goods'] }}</el-menu-item>
+                    </el-sub-menu>
+                    <el-sub-menu index="我的工作">
+                        <template #title>
+                            <el-icon><Menu /></el-icon>
+                            <span>我的工作</span>
+                        </template>
+                        <el-menu-item index="worklist">{{ table['worklist'] }}</el-menu-item>
                     </el-sub-menu>
                 </el-menu>
         </el-aside>
@@ -162,6 +170,12 @@
             area:'库区',
 
             cargo:'分类',
+
+            goods:'商品',
+
+            stock:'出/入库',
+
+            worklist:'任务清单(BETA)',
         },
     )
 
