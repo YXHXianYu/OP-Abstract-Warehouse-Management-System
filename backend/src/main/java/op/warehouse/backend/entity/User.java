@@ -3,6 +3,7 @@ package op.warehouse.backend.entity;
 import cn.hutool.core.date.DateTime;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 
 public interface User {
@@ -28,6 +29,6 @@ public interface User {
     public void setPassword(String password);
 
     public RoleType getRoleType();
-
+    public Map<String, Object> toMap();
 }
 

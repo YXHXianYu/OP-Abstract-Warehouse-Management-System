@@ -47,8 +47,10 @@ public class UserController {
         String token = jwtUtil.generateToken(username, roleType);
         response.setHeader(JwtUtil.HEADER, token);
         response.setHeader("Access-control-Expost-Headers", JwtUtil.HEADER);
-        Map<String, String> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         map.put("token", token);
+        map.put("role", String.valueOf(userLoginDTO.getRole()));
+        map.put("user", user.toMap());
         return ResultDTO.success(map);
     }
 }
