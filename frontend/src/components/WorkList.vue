@@ -505,7 +505,6 @@
         .then(function (res) {
             if(res.data.message=='ok'){
                 tableData = res.data.data;
-                // loading.value=false;
                 console.log(tableData);
                 search.value='';
             }
