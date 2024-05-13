@@ -1,5 +1,9 @@
 package op.warehouse.backend;
 
+import op.warehouse.backend.entity.*;
+import op.warehouse.backend.repository.*;
+import op.warehouse.backend.service.*;
+
 import com.alibaba.fastjson.TypeReference;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -551,6 +555,26 @@ class BackendApplicationTests {
 		deleteCargoItem(userInfo, cargoItemIds);
 		deleteCargoClass(userInfo, cargoClassIds);
 		deleteTestUser(userInfo);
+	}
+
+    @Autowired
+    private UserService userService;
+
+	/**
+	 * 第五个 Test Case
+	 * Service Layer Test
+	 * @throws Exception
+	 */
+	@Test
+	void serviceLayerTestCase() throws Exception {
+		{
+			User user = userService.getUserByUsername(RoleType.WAREHOUSE_MANAGER, "A_Unregistered_User");
+			assert user == null;
+		}
+		{
+			User user = userService.getUserByUsername(RoleType.WAREHOUSE_MANAGER, "Guest");
+			assert user != null;
+		}
 	}
 
 }
