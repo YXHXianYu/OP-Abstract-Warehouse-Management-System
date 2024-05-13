@@ -1,6 +1,6 @@
 <template>
     <div style="display: flex;width:100%">
-        <div style="width:74%;margin-left: 1%;margin-right: 5%;">
+        <div style="width:100%;margin-left: 0%;margin-right: 0%;">
             <el-card style="width: 100%" v-loading="loading || loading_2 ||loading_3">
                 <div>
                     <el-input v-model="search_2" style="width: 240px" placeholder="Please input goods" />
@@ -9,7 +9,7 @@
                         v-model="valueSelect"
                         clearable
                         placeholder="Select"
-                        style="width: 240px;margin-left:5%"
+                        style="float:right;width: 240px;"
                     >
                         <el-option
                             v-for="item in _options"
@@ -504,7 +504,7 @@
         axios.get('/warehouses')
         .then(function (res) {
             if(res.data.message=='ok'){
-                tableData = res.data.data;
+                tableData = res.data.data;  
                 console.log(tableData);
                 search.value='';
             }
