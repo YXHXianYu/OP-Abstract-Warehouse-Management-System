@@ -22,7 +22,7 @@
                 
                 <div v-for="item in stock" v-on:click="clickOn(item)">
                     <!-- {{ Number(nowID_) }} -->
-                    <div v-if="Number(nowID_)==item.createdUser?.id">
+                    <div v-if="Number(nowID_)==item.createdUser?.id || Number(nowID_)==item.pickerUser?.id">
                     <!-- <div v-if="true"> -->
                     <div v-if="item.state!=3 && item.state!=0 && (valueSelect==item.state || valueSelect==100 )&&(item.id==search_2 || !search_2)">
                     
@@ -435,7 +435,7 @@
                    {label:'未处理',value:1},
                    {label:'处理中',value:2},
                    {label:'已完成',value:3},
-                   
+
     ];
 
     const _options=ref<Option[]>();
@@ -505,7 +505,7 @@
         .then(function (res) {
             if(res.data.message=='ok'){
                 tableData = res.data.data;
-                loading.value=false;
+                // loading.value=false;
                 console.log(tableData);
                 search.value='';
             }
