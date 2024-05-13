@@ -6,6 +6,9 @@
         width: 100%;
         height: 100%;
     }
+    html, body {
+        height: 10%;
+    }
 </style>
 
 

@@ -1,5 +1,5 @@
-<template>
-    <div style="display: flex;width:100%">
+<template style="height:100%">
+    <div style="display: flex;width:100%;height:100%">
         <div style="width:25%;float: left">
             <el-card style="width: 100%">
                 <el-input v-model="search" size="small" placeholder="Type to search" />
@@ -9,7 +9,7 @@
             </el-card>
         </div>
         <div style="width:74%;margin-left: 1%;margin-right: 5%;">
-            <el-card style="width: 100%" v-loading="loading || loading_2 ||loading_3">
+            <el-card style="width: 100%;height:480px;overflow-y: auto;" v-loading="loading || loading_2 ||loading_3">
                 <div style="margin-bottom: 5%;">
                     <div style="width:100%">
                         <div style="float: left;"><h4>当前仓库：{{ nowName }}</h4></div>

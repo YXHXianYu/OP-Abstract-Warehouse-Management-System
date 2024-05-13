@@ -60,7 +60,7 @@
         content: ".";
         height: 0
     }
-    
+
     .common-layout{
         height: 100%;
     }
@@ -84,7 +84,7 @@
 </style>
 
 <template>
-    <div class="common-layout">
+    <div class="common-layout" style="height: 100%;">
         <el-container style="height: 100%;">
             <el-header class="header" style="margin:0px;padding: 0px;">
                 <div class="header-left">
@@ -108,7 +108,7 @@
                 </div>
             </el-header>
             
-            <el-container style="padding: 0px;margin: 0px;">
+            <el-container style="padding: 0px;margin: 0px;height: 100%;">
                 <el-aside width="200px" style="height:100%;margin:0px;padding: 0px;border:none;" class="full-screen">
                     <el-menu
                         router
@@ -150,8 +150,8 @@
                         </el-sub-menu>
                     </el-menu>
                 </el-aside>
-                <el-container>
-                    <el-main>
+                <el-container style="height: 100%;">
+                    <el-main style="height: 100%;">
                         <el-tabs
                             type="border-card"
                             v-model="editableTabsValue"
@@ -159,6 +159,7 @@
                             closable
                             @tab-remove="removeTab"
                             @tab-change="handleChange"
+                            style="height: 100%;"
                         >
                             <el-tab-pane
                                 v-for="item in editableTabs"
@@ -166,7 +167,7 @@
                                 :label="item.title"
                                 :name="item.name"
                             >
-                                <router-view></router-view>
+                                <router-view style="height: 100%;"></router-view>
                             </el-tab-pane>
                         </el-tabs>
                     </el-main>
