@@ -1,0 +1,51 @@
+#DB Configuration:
+#?????
+
+# ????MySQL8????????????????cj
+spring:
+  data:
+    redis:
+      database: 0
+      host: 121.40.90.193
+      port: 6379
+      password: 114514
+      timeout: 1000
+
+
+
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    # jdbc:mysql://{{ip}}:{{port}}/{{database_name}}?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
+    url: jdbc:mysql://121.40.90.193:3306/test_database?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
+    # database username
+    username: root
+    # database password
+    password: MySQL_2024JACKY
+  jpa:
+    database: mysql
+    show-sql: true
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+      naming_strategy: org.hibernate.cfg.ImprovedNamingStrategy
+    open-in-view: true
+
+
+
+
+################################
+# JWT ??
+################################
+security:
+  # ??
+  secret: spring-boot-learning-examples
+  # ?????????1??
+  access-expires: 86400
+  # ?????????30??
+  refresh-expires: 2592000
+  # ???
+  white-list: /user/login,/user/register,/user/refresh
+
+
+
+
