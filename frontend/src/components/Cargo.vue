@@ -7,15 +7,24 @@
             @node-click="handleNodeClick"
             :highlight-current="true"
             v-loading="loading"
+            class="custom-tree"
         >
             <template #default="{ node, data }">
-                <span class="custom-tree-node">
-                    <span>{{ node.label }}</span>
-                    <span>
-                        <el-button type="primary" size="small" :icon="Plus" @click="dialogFormVisible_2=true;" circle></el-button>
-                        <el-button type="danger" size="small" :icon="Minus" @click="" circle></el-button>
-                    </span>
-                </span>
+                <div style="width: 100%;" @mouseenter="hoverID=data.id;" @mouseover="hoverID=data.id;" @mousemove="hoverID=data.id;">
+                    <div style="margin: 10px">
+                        <span v-if="data.children.length!=0">
+                            <el-icon><Goods /></el-icon>   
+                        </span>
+                        <span v-if="data.children.length==0">
+                            <el-icon><Box /></el-icon>
+                        </span>
+                        <span style="margin-left: 10px;">{{ node.label }}</span>
+                        <span style="float: right;" class="children" v-if="hoverID===data.id">
+                            <el-button type='text' size="small" :icon="Plus" @click.stop="dialogFormVisible_2=true;"></el-button>
+                            <el-button type='text' size="small" :icon="Minus" @click.stop=""></el-button>
+                        </span>
+                    </div>
+                </div>
             </template>
         </el-tree>
     </el-card>
@@ -61,6 +70,10 @@
     const loading=ref(true);
     const loading_2=ref(false);
 
+    const al=()=>{
+        alert(hoverID)
+    }
+
     interface Tree {
         label: string
         children?: Tree[]
@@ -102,6 +115,7 @@
             if(res.data.message=='ok'){
                 console.log(parse(res.data.data));
                 tree.value = parse(res.data.data);
+                console.log(tree.value);
                 loading.value=false;
             }
             else{
@@ -212,15 +226,29 @@
         form.name='';
         form.description='';
     };
+
+    let hoverID=ref(0);
+    hoverID.value=10;
+    // let hoverID=0;
 </script>
 
 <style>
-.custom-tree-node {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 14px;
-  padding-right: 8px;
-}
+    .custom-tree .el-tree-node{
+        margin-left: 10px;
+    }
+    .custom-tree .el-tree-node__content {
+        height: 50px;
+        display: flex;
+        align-items: center;
+        padding-left:10px
+    }
+    .custom-tree .el-tree-node__expand-icon {
+        display: none;
+    }
+    .custom-tree .children {
+        display: none;
+    }
+    .custom-tree:hover .children {
+        display: block;
+    }
 </style>
