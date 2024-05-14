@@ -62,19 +62,19 @@
                                 </div>
                             </div>
                             <div>
-                                <h4>单号：{{ item.id }}</h4>
+                                <h3>单号：{{ item.id }}</h3>
                             </div>
                             <div>
-                                <h4>介绍：{{ item.description }}</h4>
+                                <h3>介绍：{{ item.description }}</h3>
                             </div>
                             <div>
                                 
                             </div>
                             <!-- 最底层 -->
                             <div style="display: flex">
-                                <div><h6>(类别模块正在开发中...)</h6></div>
+                                <div><h5>(类别模块正在开发中...)</h5></div>
                                 <div style="margin-left: auto;">
-                                    <h5>创建时间：{{moment.unix(item.createdTime/1000).format('YYYY-MM-DD HH:mm:ss')}}</h5>
+                                    <h4>创建时间：{{moment.unix(item.createdTime/1000).format('YYYY-MM-DD HH:mm:ss')}}</h4>
                                 </div>
                             </div>
                         </el-card>
