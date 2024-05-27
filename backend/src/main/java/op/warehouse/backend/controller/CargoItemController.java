@@ -10,6 +10,7 @@ import op.warehouse.backend.entity.RoleType;
 import op.warehouse.backend.repository.CargoClassRepository;
 import op.warehouse.backend.repository.CargoItemRepository;
 import op.warehouse.backend.repository.WarehouseAreaRepository;
+import op.warehouse.backend.service.CargoItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +25,9 @@ public class CargoItemController {
 
     @Autowired
     private WarehouseAreaRepository warehouseAreaRepository;
+
+    @Autowired
+    private CargoItemService cargoItemService;
 
     @Getter
     @Setter
@@ -89,5 +93,16 @@ public class CargoItemController {
                 ResponseCodeEnum.NOT_FOUND,
                 "找不到id为 " + id + " 的货物物品"
         ));
+    }
+
+    @PutMapping("/{id}/waiting-on-board")
+    @RequiresRoleType(RoleType.WAREHOUSE_MANAGER)
+    ResultDTO updateStateToInBoundWaiting(@PathVariable Long id) {
+        var response = cargoItemService.changeState(id, CargoItem.StateEnum.ON_BOARD_WAITING);
+        if(response == 404) {
+            return ResultDTO.error(ResponseCodeEnum.NOT_FOUND, "找不到id为 " + id + " 的货物。");
+        } else {
+            return ResultDTO.success();
+        }
     }
 }

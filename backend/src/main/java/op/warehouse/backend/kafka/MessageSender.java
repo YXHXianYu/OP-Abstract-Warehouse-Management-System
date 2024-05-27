@@ -14,7 +14,7 @@ public class MessageSender {
     @Autowired
     private KafkaTemplate<String, Object> kafkaTemplate;
 
-    public void addWaitMission(int cargoID) {
+    public void addWaitMission(Long cargoID) {
         Map<String, Object> m = new HashMap<>();
         m.put("cargoID", cargoID);
         //将m用fastjson转成json文本
