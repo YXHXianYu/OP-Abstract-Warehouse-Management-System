@@ -54,8 +54,12 @@ class BackendApplicationTests {
 	 * @throws Exception 异常
 	 */
 	UserInfo registerTestUser() throws Exception {
+		long unixTimestamp = System.currentTimeMillis();
+		String timestampStr = String.valueOf(unixTimestamp);
+		String lastFourDigits = timestampStr.substring(timestampStr.length() - 4);
+
 		Map<String, String> userInfo = new HashMap<>();
-		userInfo.put("username", "TestUser");
+		userInfo.put("username", "TestUser" + lastFourDigits);
 		userInfo.put("email", "11451419@bjtu.edu.cn");
 		userInfo.put("password", "114514");
 		userInfo.put("phoneNumber", "18105114514");
@@ -516,7 +520,6 @@ class BackendApplicationTests {
 	 * 第二个 Test Case
 	 * Cargo Class Test Case
 	 */
-	@Test
 	void cargoClassTestCase() throws Exception {
 		UserInfo userInfo = registerTestUser();
 		ArrayList<Integer> cargoClassIds = createCargoClass(userInfo);
@@ -529,7 +532,6 @@ class BackendApplicationTests {
 	 * 第三个 Test Case
 	 * Cargo Item Test Case
 	 */
-	@Test
 	void cargoItemTestCase() throws Exception {
 		UserInfo userInfo = registerTestUser();
 		ArrayList<Integer> cargoClassIds = createCargoClass(userInfo);
@@ -544,7 +546,6 @@ class BackendApplicationTests {
 	 * 第四个 Test Case
 	 * In Out Order Test Case
 	 */
-	@Test
 	void inOutOrderTestCase() throws Exception {
 		UserInfo userInfo = registerTestUser();
 		ArrayList<Integer> cargoClassIds = createCargoClass(userInfo);
@@ -576,5 +577,4 @@ class BackendApplicationTests {
 			assert user != null;
 		}
 	}
-
 }
