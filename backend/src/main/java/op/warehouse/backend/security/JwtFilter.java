@@ -1,5 +1,6 @@
 package op.warehouse.backend.security;
 
+import cn.hutool.json.JSONObject;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,6 +11,7 @@ import org.apache.shiro.web.filter.AccessControlFilter;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 @Slf4j
 @Component
@@ -56,6 +58,16 @@ public class JwtFilter extends AccessControlFilter {
             getSubject(servletRequest, servletResponse).login(jwtToken);
         } catch (Exception e) {
             log.error("Subject login error:", e);
+            HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
+            httpServletResponse.setStatus(200);
+            httpServletResponse.setContentType("application/json;charset=utf-8");
+            PrintWriter out = httpServletResponse.getWriter();
+            JSONObject json = new JSONObject();
+            json.set("code", "114514");
+            json.set("message", "登录已失效，请重新登录！");
+            out.println(json);
+            out.flush();
+            out.close();
             return false;
         }
         //如果走到这里，那么就返回true，代表登录成功

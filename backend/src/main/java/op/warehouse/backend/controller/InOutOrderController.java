@@ -11,8 +11,6 @@ import op.warehouse.backend.repository.*;
 import op.warehouse.backend.service.UserService;
 import op.warehouse.backend.util.SecurityUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -167,7 +165,7 @@ public class InOutOrderController {
                     var generatedCargoItem = new CargoItem();
                     generatedCargoItem.setCargoClass(cargoClass);
                     generatedCargoItem.setWarehouseArea(warehouseArea);
-                    generatedCargoItem.setState(String.valueOf(CargoItem.StateEnum.ON_BOARDING));
+                    generatedCargoItem.setState(String.valueOf(CargoItem.StateEnum.ASSIGNING_WAITING));
                     generatedCargoItem = cargoItemRepository.save(generatedCargoItem);
                     inOutOrder.getCargoItemList().add(generatedCargoItem);
                 }
@@ -196,9 +194,9 @@ public class InOutOrderController {
         if (updateDTO.state == 0) {
             for(var item : inOutOrder.getCargoItemList()) {
                 if(inOutOrder.getIsOutOrder()){
-                    item.setState(String.valueOf(CargoItem.StateEnum.DOWN_BOARDING));
+                    item.setState(String.valueOf(CargoItem.StateEnum.DOWN_BOARD_WAITING));
                 } else {
-                    item.setState(String.valueOf(CargoItem.StateEnum.ON_BOARDING));
+                    item.setState(String.valueOf(CargoItem.StateEnum.ASSIGNING_WAITING));
                 }
                 cargoItemRepository.save(item);
             }
@@ -215,9 +213,9 @@ public class InOutOrderController {
             inOutOrder.setPickerUser(user);
             for(var item : inOutOrder.getCargoItemList()) {
                 if(inOutOrder.getIsOutOrder()){
-                    item.setState(String.valueOf(CargoItem.StateEnum.DOWN_BOARDING));
+                    item.setState(String.valueOf(CargoItem.StateEnum.DOWN_BOARD_WAITING));
                 } else {
-                    item.setState(String.valueOf(CargoItem.StateEnum.ON_BOARDING));
+                    item.setState(String.valueOf(CargoItem.StateEnum.ON_BOARD_WAITING));
                 }
                 cargoItemRepository.save(item);
             }

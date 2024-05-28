@@ -1,35 +1,8 @@
-#DB Configuration:
-#?????
-
-# ????MySQL8????????????????cj
+server:
+  port: 8081
 spring:
-  data:
-    redis:
-      database: 0
-      host: 121.40.90.193
-      port: 6379
-      password: 114514
-      timeout: 1000
-
-
-
-  datasource:
-    driverClassName: com.mysql.cj.jdbc.Driver
-    # jdbc:mysql://{{ip}}:{{port}}/{{database_name}}?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
-    url: jdbc:mysql://121.40.90.193:3306/test_database?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
-    # database username
-    username: root
-    # database password
-    password: MySQL_2024JACKY
-  jpa:
-    database: mysql
-    show-sql: true
-    generate-ddl: true
-    hibernate:
-      ddl-auto: update
-      naming_strategy: org.hibernate.cfg.ImprovedNamingStrategy
-    open-in-view: true
-
+  application:
+    name: application-kafka
   kafka:
     bootstrap-servers: ${KAFKA_HOST:8.140.250.103}:${KAFKA_PORT:9092} #这个是kafka的地址,对应你server.properties中配置的
     producer:
@@ -68,20 +41,8 @@ spring:
       missing-topics-fatal: false # consumer listener topics 不存在时，启动项目就会报错
       type: batch #设置批量消费
 
-
-
-################################
-# JWT ??
-################################
-security:
-  # ??
-  secret: spring-boot-learning-examples
-  # ?????????1??
-  access-expires: 86400
-  # ?????????30??
-  refresh-expires: 2592000
-  # ???
-  white-list: /user/login,/user/register,/user/refresh
-
-
-
+ware:
+  task:
+    robot:
+      num: 5
+      speed: 3
