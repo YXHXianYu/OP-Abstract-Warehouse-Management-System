@@ -132,6 +132,7 @@
                             <el-menu-item index="ware">{{ table['ware'] }}</el-menu-item>
                             <el-menu-item index="area">{{ table['area'] }}</el-menu-item>
                             <el-menu-item index="stock">{{ table['stock'] }}</el-menu-item>
+                            <el-menu-item index="animePage">{{ table['animePage'] }}</el-menu-item>
                         </el-sub-menu>
                         <el-sub-menu index="物料管理">
                             <template #title>
@@ -244,6 +245,8 @@
             stock:'出/入库',
 
             worklist:'任务清单(BETA)',
+
+            animePage:'仓库监控',
         },
     )
 
