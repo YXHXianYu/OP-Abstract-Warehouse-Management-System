@@ -181,8 +181,10 @@ export default{
                 }
 
                 //文字
-                let str="货架 #1";
-                this.ctxBuffer.fillText(str, this.data.goodrest[i].x, (this.rooms[j].lca.Y1+this.rooms[j].lca.Y0)/2+14*this.nST.sTX);
+                let str="货架 #"+(i+1);
+                this.ctx.fillStyle = 'black';
+                this.ctx.font = "16px 微软雅黑";
+                this.ctx.fillText(str, this.data.goodrest[i].x-30, this.data.goodrest[i].y-10);
             }
             
             

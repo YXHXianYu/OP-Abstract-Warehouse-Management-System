@@ -643,6 +643,39 @@ const commitState=(formEl: FormInstance | undefined)=>{
         loading_3.value=false;
     });
 
+    axios.put(`/cargo-items/121/waiting-on-board`)
+    .then(function (res) {
+        if(res.data.message=='ok'){
+            ElNotification({
+                title: 'Success',
+                message: '创建成功',
+                type: 'success',
+            });
+            loading_3.value=false;
+            dialogFormVisible.value=false;
+            dialogFormVisible_2.value=false;
+            dialogFormVisible_3.value=false;
+            refresh();
+            // load();
+        }
+        else{
+            ElNotification({
+                title: '创建错误',
+                message: res.data.message,
+                type: 'error',
+            });
+            loading_3.value=false;
+        }
+    })
+    .catch(function (error) {
+        ElNotification({
+            title: '网络错误',
+            message: error,
+            type: 'error',
+        });
+        loading_3.value=false;
+    });
+
 }
 
 
