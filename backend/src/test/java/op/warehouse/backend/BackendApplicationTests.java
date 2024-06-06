@@ -577,4 +577,223 @@ class BackendApplicationTests {
 			assert user != null;
 		}
 	}
+
+	@Test
+	void extraTestCaseCreateUserNull() throws Exception {
+		{
+			try {
+				User user = userService.createUser(RoleType.WAREHOUSE_MANAGER, new WarehouseManager());
+			} catch (Exception e) {
+//				System.out.println(e.getMessage());
+				assert e.getMessage().strip().equals("could not execute statement [Column 'email' cannot be null] [insert into user_warehouse_admin (email,password,phone_number,registration_date,username) values (?,?,?,?,?)]; SQL [insert into user_warehouse_admin (email,password,phone_number,registration_date,username) values (?,?,?,?,?)]; constraint [null]");
+			}
+		}
+	}
+
+	@Test
+	void extraTestCaseCreateUserNull2() throws Exception {
+		{
+			try {
+				User user = new WarehouseManager();
+				user.setEmail("example@gmail.com");
+				userService.createUser(RoleType.WAREHOUSE_MANAGER, user);
+			} catch (Exception e) {
+//				System.out.println(e.getMessage());
+				assert e.getMessage().strip().equals("could not execute statement [Column 'password' cannot be null] [insert into user_warehouse_admin (email,password,phone_number,registration_date,username) values (?,?,?,?,?)]; SQL [insert into user_warehouse_admin (email,password,phone_number,registration_date,username) values (?,?,?,?,?)]; constraint [null]");
+			}
+		}
+	}
+
+	@Test
+	void extraTestCaseCreateUserNull3() throws Exception {
+		{
+			try {
+				User user = new WarehouseManager();
+				user.setEmail("example@gmail.com");
+				user.setPassword("jdkSLaHj2231gSA");
+				userService.createUser(RoleType.WAREHOUSE_MANAGER, user);
+			} catch (Exception e) {
+//				System.out.println(e.getMessage());
+				assert e.getMessage().strip().equals("could not execute statement [Column 'phone_number' cannot be null] [insert into user_warehouse_admin (email,password,phone_number,registration_date,username) values (?,?,?,?,?)]; SQL [insert into user_warehouse_admin (email,password,phone_number,registration_date,username) values (?,?,?,?,?)]; constraint [null]");
+			}
+		}
+	}
+
+	@Test
+	void extraTestCaseCreateUserNull4() throws Exception {
+		{
+			try {
+				User user = new WarehouseManager();
+				user.setEmail("example@gmail.com");
+				user.setPassword("jdkSLaHj2231gSA");
+				user.setPhoneNumber("18105114514");
+				userService.createUser(RoleType.WAREHOUSE_MANAGER, user);
+			} catch (Exception e) {
+//				System.out.println(e.getMessage());
+				assert e.getMessage().strip().equals("could not execute statement [Column 'username' cannot be null] [insert into user_warehouse_admin (email,password,phone_number,registration_date,username) values (?,?,?,?,?)]; SQL [insert into user_warehouse_admin (email,password,phone_number,registration_date,username) values (?,?,?,?,?)]; constraint [null]");
+			}
+		}
+	}
+
+	@Test
+	void extraTestCaseCreateUserNull5() throws Exception {
+		{
+			try {
+				User user = new WarehouseManager();
+				user.setEmail("example@gmail.com");
+				user.setPassword("jdkSLaHj2231gSA");
+				user.setPhoneNumber("18105114514");
+				user.setUsername("TestUser");
+				userService.createUser(RoleType.WAREHOUSE_MANAGER, user);
+			} catch (Exception e) {
+//				System.out.println(e.getMessage());
+				assert e.getMessage().strip().equals("could not execute statement [Duplicate entry 'TestUser' for key 'user_warehouse_admin.UK_r43af9ap4edm43mmtq01oddj6'] [insert into user_warehouse_admin (email,password,phone_number,registration_date,username) values (?,?,?,?,?)]; SQL [insert into user_warehouse_admin (email,password,phone_number,registration_date,username) values (?,?,?,?,?)]; constraint [user_warehouse_admin.UK_r43af9ap4edm43mmtq01oddj6]");
+			}
+		}
+	}
+
+	@Test
+	void extraTestCaseCreateUserNull6() throws Exception {
+		{
+			User user = new WarehouseManager();
+			user.setEmail("example@gmail.com");
+			user.setPassword("jdkSLaHj2231gSA");
+			user.setPhoneNumber("18105114514");
+			user.setUsername("TestUserJsDlka@hdsak");
+			userService.createUser(RoleType.WAREHOUSE_MANAGER, user);
+		}
+		{
+			try {
+				User user = new WarehouseManager();
+				user.setEmail("example@gmail.com");
+				user.setPassword("jdkSLaHj2231gSA");
+				user.setPhoneNumber("18105114514");
+				user.setUsername("TestUserJsDlka@hdsak");
+				userService.createUser(RoleType.WAREHOUSE_MANAGER, user);
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+				assert e.getMessage().strip().equals("could not execute statement [Duplicate entry 'TestUserJsDlka@hdsak' for key 'user_warehouse_admin.UK_r43af9ap4edm43mmtq01oddj6'] [insert into user_warehouse_admin (email,password,phone_number,registration_date,username) values (?,?,?,?,?)]; SQL [insert into user_warehouse_admin (email,password,phone_number,registration_date,username) values (?,?,?,?,?)]; constraint [user_warehouse_admin.UK_r43af9ap4edm43mmtq01oddj6]");
+			}
+		}
+		{
+			userService.deleteUser(RoleType.WAREHOUSE_MANAGER, "TestUserJsDlka@hdsak");
+		}
+	}
 }
+
+/*
+# CI-CD README
+
+## 1. 简介
+
+* 本项目是一个基于Spring Boot的仓库管理系统，实现了用户注册、登录、货物分类、货物管理、出入库单管理等功能。
+* 本文档是CI/CD实验的README文档，主要介绍了CI/CD的实现过程。
+* 本文档共分为以下这几个部分
+  * CI/CD工作流
+  * 执行结果
+
+## 2. CI/CD工作流
+
+* 本项目使用以下技术实现CI/CD
+  * 后端构建：Maven
+  * 前端构建：npm
+  * 自动化部署：Github Actions
+  * 化简构建流程：Docker
+  * 自动化测试：JUnit
+
+* 流程
+  * Test Case
+    * 在后端代码中编写测试用例，使用JUnit框架进行测试
+  * Github Actions
+	* 当代码提交到Github仓库的main分支时，Github Actions会自动触发CI/CD流程
+    * Github Actions配置了云服务器的SSH密钥，可以自动登录到云服务器
+    * Github Actions登陆腾讯云服务器，执行Docker构建与部署
+    * Github Actions deploy.yml脚本代码
+    ```yml
+    name: Deploy to Aliyun Docker
+
+    on:
+      push:
+        branches:
+          - main
+
+    jobs:
+      deploy:
+        runs-on: ubuntu-22.04
+        steps:
+        - name: Setup SSH connection
+          uses: appleboy/ssh-action@master
+          with:
+            host: ${{ secrets.ALIYUN_SERVER_IP }}
+            username: ${{ secrets.ALIYUN_SERVER_USERNAME }}
+            key: ${{ secrets.ALIYUN_SERVER_SSH_PRIVATE_KEY }}
+            script: |
+              cd ~/OP-Abstract-Warehouse-Management-System
+              git pull origin main
+              docker-compose down
+              docker-compose build
+              docker-compose up -d
+    ```
+  * Docker
+    * Docker根据docker-compose.yml文件，分别构建前端与后端的Docker镜像
+    * 前端和后端分别根据对应的Dockerfile文件构建Docker镜像
+    * 待前后端Docker镜像构建完成后，Docker根据docker-compose.yml文件启动容器
+    * docker-compose.yml文件
+    ```yml
+    version: '3.8'
+    services:
+      backend:
+        build: ./backend
+        ports:
+          - "8080:8080"
+        environment:
+          - SPRING_DATASOURCE_URL=jdbc:mysql://121.40.90.193:3306/prod_database
+          - SPRING_DATASOURCE_USERNAME=root
+          - SPRING_DATASOURCE_PASSWORD=MySQL_2024JACKY
+
+      frontend:
+        build: ./frontend
+        ports:
+          - "5173:5173"
+    ```
+    * Backend Dockerfile
+	```Dockerfile
+	# 使用 OpenJDK 为基础镜像
+    FROM maven:3.8.5-openjdk-17
+
+    # 设置工作目录
+    WORKDIR /app
+
+    # 将 Maven 项目复制到容器中
+    COPY . ./
+
+    # 使用 Maven 构建应用
+    RUN mvn -s ./settings.xml clean package -X
+
+    # 指定运行时的端口
+    EXPOSE 8080
+
+    # 运行 SpringBoot 应用
+    CMD ["java", "-jar", "target/backend-0.0.1-SNAPSHOT.jar"]
+    ```
+    * Frontend Dockerfile
+    ```Dockerfile
+    # 构建阶段
+    FROM node:18
+
+    WORKDIR /app
+
+    # 安装依赖
+    COPY package*.json ./
+    RUN npm install
+
+    # 构建应用
+    COPY ./ ./
+
+    # 指定运行时的端口
+    EXPOSE 5173
+
+    CMD ["npm", "run", "dev"]
+    ```
+
+*/

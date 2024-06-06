@@ -31,4 +31,10 @@ public class UserService {
             return null;
         }
     }
+
+    public void deleteUser(RoleType role, String username) {
+        if(role == RoleType.WAREHOUSE_MANAGER) {
+            warehouseManagerRepository.delete((WarehouseManager) getUserByUsername(role, username));
+        }
+    }
 }
