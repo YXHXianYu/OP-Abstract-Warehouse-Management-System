@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: op.warehouse.backend.BackendApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 12.80 s -- in op.warehouse.backend.BackendApplicationTests
