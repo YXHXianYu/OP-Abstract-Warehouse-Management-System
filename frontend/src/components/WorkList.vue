@@ -50,6 +50,7 @@
                                         <h1 style="color:rgb(255,186,93)">
                                             <el-icon><Loading /></el-icon>
                                             处理中</h1>
+                                            
                                     </div>
                                     <div v-if="item.state==3" style="display: flex;">
                                         <h1 style="color:rgb(103,194,58)">
@@ -215,11 +216,14 @@
                                         <h1>
                                             <el-icon><Clock /></el-icon>
                                             未处理</h1>
+                                            <el-button type="primary" @click="clickOn_2();" link>查看详细</el-button>
                                     </div>
                                     <div v-if="nowItem?.state==2">
                                         <h1 style="color:rgb(255,186,93)">
                                             <el-icon><Loading /></el-icon>
                                             处理中</h1>
+                                            <el-button type="primary" @click="clickOn_2();" link>查看详细</el-button>
+                                            
                                     </div>
                                     <div v-if="nowItem?.state==3" style="display: flex;">
                                         <h1 style="color:rgb(103,194,58)">
@@ -279,6 +283,47 @@
             </el-card>
         </div>
     </div>
+    <el-dialog v-model="dialogTableVisible" title="自动入库查看" width="800">
+        <div style="color: rgb(13,188,121);float: right"> 
+            <el-icon style="margin:0px 10px;"><Monitor /></el-icon>在线状态
+        </div>
+        <el-table :data="gridData">
+            <el-table-column property="id" label="RFID" />
+            <el-table-column property="state" label="状态" >
+                <template #default="scope">
+                    <!-- {{scope.row.state}}  -->
+                    <div v-if="scope.row.state==='LOADING'">
+                        <el-icon class="is-loading">
+                            <Loading />
+                        </el-icon>
+                        装货<el-icon><Box /></el-icon>
+                    </div>
+                    <div v-if="scope.row.state==='ON_BOARDING'">
+                        <el-icon class="is-loading">
+                            <Loading />
+                        </el-icon>
+                        入库<el-icon><Box /></el-icon>
+                    </div>
+                    <div v-if="scope.row.state==='TRANSPORTING'">
+                        <el-icon class="is-loading">
+                            <Loading />
+                        </el-icon>
+                        无人车运输中...<el-icon><Van /></el-icon>
+                    </div>
+                    <div v-if="scope.row.state==='SHELVING'">
+                        <el-icon class="is-loading">
+                            <Loading />
+                        </el-icon>
+                        <el-icon><Sell /></el-icon>
+                        自动货梯运输中...<el-icon><CaretTop /></el-icon>
+                    </div>
+                    <div v-if="scope.row.state==='READY'">
+                        <el-icon><CircleCheckFilled /></el-icon>已入库
+                    </div>
+                </template>
+            </el-table-column>
+        </el-table>
+  </el-dialog>
 </template>
 
 <script lang="ts" setup>
@@ -298,6 +343,7 @@
     import { ElNotification } from 'element-plus'
     import { onMounted, computed } from 'vue';
     import type { FormInstance, FormRules } from 'element-plus'
+    import { fa } from 'element-plus/es/locales.mjs';
 
     const loading = ref(true);
     const loading_2 = ref(false);
@@ -305,6 +351,14 @@
 
     const valueSelect=ref<number>();
 
+    const dialogTableVisible=ref<Boolean>(false);
+    interface Grid {
+        id:Number
+        state:String
+    }
+    const gridData = ref<Grid[]>([
+        
+    ]);
 
     const nowID_=window.localStorage.getItem("opID");
 
@@ -450,6 +504,9 @@
     const nowName = ref('无')
 
     const nowItem = ref<Stock>();
+
+    var socket;
+
     nowItem.value={
         id:-1,
         isOutOrder:false,
@@ -466,10 +523,42 @@
         load();
     };
 
+    const timer=ref<Number>(0);
     const clickOn=(item:Stock)=>{
         // alert(item.id);
         nowItem.value=item;
         dialogFormVisible_3.value=true;
+    }
+    const clickOn_2=()=>{
+        //websocket建立
+        timer.value=0;
+        socket = new WebSocket("ws://60.205.253.222:8080/webSocketServer/"+window.localStorage.getItem('opID')+"/"+nowItem.value.id);
+        socket.onmessage = function (event) {
+            console.log('JSON_from_websocket:',JSON.parse(event.data));
+            if(timer.value==0 && !(Array.isArray(JSON.parse(event.data)))){return;}
+            if(timer.value===0){
+                gridData.value=JSON.parse(event.data);
+                console.log('input Data:',gridData.value);
+            }
+            else{
+                var temp=JSON.parse(event.data);
+                var result=gridData.value;
+                for(let i=0;i<result.length;i++){
+                    if(result[i].id===temp.cargoID){
+                        result[i].state=temp.state;
+                    }
+                }
+                gridData.value=result;    
+            }
+            timer.value=Number(timer.value)+1;
+        };
+        dialogTableVisible.value=true;
+    }
+
+    
+
+    const socketCallback=()=>{
+        
     }
 
     const load=()=>{    
@@ -529,7 +618,8 @@
             if(res.data.message=='ok'){
                 stock.value = res.data.data;
                 loading.value=false;
-                console.log(tableData);
+
+                // for
                 search.value='';
             }
             else{
@@ -610,19 +700,20 @@ interface Tree {
 const commitState=(formEl: FormInstance | undefined)=>{
     loading_3.value=true;
     axios.patch(`/in-out-orders/${Number(nowItem.value.id)}`, 
-    { "state":Number(nowItem.value.state),"pickerUserId":15})
+    // axios.patch(`/in-out-orders/1`, 
+    { "state":Number(nowItem.value.state),"pickerUserId":window.localStorage.getItem('opID')})
     .then(function (res) {
         if(res.data.message=='ok'){
             ElNotification({
                 title: 'Success',
-                message: '创建成功',
+                message: '修改成功',
                 type: 'success',
             });
             loading_3.value=false;
             dialogFormVisible.value=false;
             dialogFormVisible_2.value=false;
             dialogFormVisible_3.value=false;
-            refresh();
+            refresh(); 
             // load();
         }
         else{
@@ -643,12 +734,13 @@ const commitState=(formEl: FormInstance | undefined)=>{
         loading_3.value=false;
     });
 
-    axios.put(`/cargo-items/121/waiting-on-board`)
+    console.log('1222222',nowItem.value)
+    axios.put(`/cargo-items/`+nowItem.value.id+`/waiting-on-board`)
     .then(function (res) {
         if(res.data.message=='ok'){
             ElNotification({
                 title: 'Success',
-                message: '创建成功',
+                message: '同步成功',
                 type: 'success',
             });
             loading_3.value=false;

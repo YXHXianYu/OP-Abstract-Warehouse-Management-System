@@ -22,6 +22,7 @@ export default defineConfig({
       '/api': {
                 
         target: 'http://60.205.253.222:8080',
+        // target: 'http://8.140.250.103:8080',
         changeOrigin: true,//允许跨域
         // secure:false,//解决自签名证书错误
         rewrite: (path) => path.replace(/^\/api/, ''),
