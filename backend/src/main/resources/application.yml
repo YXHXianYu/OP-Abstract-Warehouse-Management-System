@@ -23,7 +23,7 @@ spring:
     password: MySQL_2024JACKY
   jpa:
     database: mysql
-    show-sql: true
+    show-sql: false
     generate-ddl: true
     hibernate:
       ddl-auto: update

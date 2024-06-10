@@ -8,6 +8,7 @@ import op.warehouse.backend.dto.ResponseCodeEnum;
 import op.warehouse.backend.dto.ResultDTO;
 import op.warehouse.backend.entity.*;
 import op.warehouse.backend.repository.*;
+import op.warehouse.backend.service.CargoItemService;
 import op.warehouse.backend.service.UserService;
 import op.warehouse.backend.util.SecurityUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,9 @@ public class InOutOrderController {
 
     @Autowired
     private WarehouseManagerRepository warehouseManagerRepository;
+
+    @Autowired
+    CargoItemService cargoItemService;
 
     @Getter
     @Setter
@@ -207,7 +211,7 @@ public class InOutOrderController {
             }
             var optionalUser = warehouseManagerRepository.findById(updateDTO.pickerUserId);
             if(optionalUser.isEmpty()) {
-                return ResultDTO.error(ResponseCodeEnum.NOT_FOUND, "id为 " + id + " 的拣货员不存在。");
+                return ResultDTO.error(ResponseCodeEnum.NOT_FOUND, "id为 " + updateDTO.pickerUserId + " 的拣货员不存在。");
             }
             var user = optionalUser.get();
             inOutOrder.setPickerUser(user);
@@ -228,6 +232,7 @@ public class InOutOrderController {
                     item.setState(String.valueOf(CargoItem.StateEnum.ON_BOARDING));
                 }
                 cargoItemRepository.save(item);
+                cargoItemService.startMission(item.getId(), inOutOrder.getId());
             }
             inOutOrder.setState(InOutOrder.StateEnum.IN_PROCESS);
         } else if (updateDTO.state == 3) {

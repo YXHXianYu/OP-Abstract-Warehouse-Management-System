@@ -14,6 +14,7 @@ public class KafkaConsumer {
 
     @KafkaListener(topics = "wait", groupId = "testGroup")
     public void onNormalMessage(String message) {
+        System.out.println("Received Message: " + message);
 //        try {
 //            Thread.sleep(2000);
 //        } catch (InterruptedException e) {

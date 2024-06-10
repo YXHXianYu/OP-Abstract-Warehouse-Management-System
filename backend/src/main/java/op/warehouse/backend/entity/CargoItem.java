@@ -22,7 +22,10 @@ public class CargoItem {
         READY(4),
         DOWN_BOARD_WAITING(6),
         DOWN_BOARDING(7),
-        LEAVED(8);
+        LEAVED(8),
+        LOADING(9),
+        TRANSPORTING(10),
+        SHELVING(11);
 
         StateEnum(int number) {
             this.number = number;
