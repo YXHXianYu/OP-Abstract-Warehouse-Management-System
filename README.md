@@ -1,8 +1,6 @@
 # OP Abstract Warehouse Management System
 
-## How to deploy
-
-### Using Docker
+## How to deploy: Using Docker
 
 * Docker version: `>= 25.0.2`
 
@@ -22,7 +20,7 @@
   docker-compose up
   ```
 
-### Project Configuration
+## Project Configuration
 
 * Frontend
   * Vue.js + Vite + Node v18

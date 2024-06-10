@@ -1,7 +1,107 @@
 <style>
+    /* 把我们所有标签的内外边距清零 */
+    * {
+        margin: 0;
+        padding: 0
+    }
+    /* em 和 i 斜体的文字不倾斜 */
+    em,
+    i {
+        font-style: normal
+    }
+    /* 去掉li 的小圆点 */
+    li {
+        list-style: none
+    }
+    
+    img {
+        /* border 0 照顾低版本浏览器 如果 图片外面包含了链接会有边框的问题 */
+        border: 0;
+        /* 取消图片底侧有空白缝隙的问题 */
+        vertical-align: middle
+    }
+    
+    button {
+        /* 当我们鼠标经过button 按钮的时候，鼠标变成小手 */
+        cursor: pointer
+    }
+    
+    a {
+        color: #666;
+        text-decoration: none
+    }
+    
+    a:hover {
+        color: #c81623
+    }
+    
+    button,
+    input {
+        /* "\5B8B\4F53" 就是宋体的意思 这样浏览器兼容性比较好 */
+        font-family: Microsoft YaHei, Heiti SC, tahoma, arial, Hiragino Sans GB, "\5B8B\4F53", sans-serif
+    }
+    
+    body {
+        /* CSS3 抗锯齿形 让文字显示的更加清晰 */
+        -webkit-font-smoothing: antialiased;
+        background-color: #fff;
+        font: 12px/1.5 Microsoft YaHei, Heiti SC, tahoma, arial, Hiragino Sans GB, "\5B8B\4F53", sans-serif;
+        color: #666
+    }
+    
+    .hide,
+    .none {
+        display: none
+    }
+    /* 清除浮动 */
+    .clearfix:after {
+        visibility: hidden;
+        clear: both;
+        display: block;
+        content: ".";
+        height: 0
+    }
+
+    
     .body{
         width:100%;
         height:100%;
+    }
+    .img1{
+        position:absolute;
+        left:5%;
+        top:0%;
+        width:35%;
+        height:60%;
+    }
+    .img1 img {
+        width: 100%;
+        height: 100%;
+        object-fit: fill;
+    }
+    .img2{
+        position:absolute;
+        left:27%;
+        top:54%;
+        width:50%;
+        height:45%;
+    }
+    .img2 img {
+        width: 100%;
+        height: 100%;
+        object-fit: fill;
+    }
+    .img3{
+        position:absolute;
+        left:60%;
+        top:10%;
+        width:40%;
+        height:60%;
+    }
+    .img3 img {
+        width: 100%;
+        height: 100%;
+        object-fit: fill;
     }
     .main-box{
         position:absolute;
@@ -16,6 +116,8 @@
         box-shadow: 10px 10px 10px #d1d9e6, -10px -10px 10px #f9f9f9;
         border-radius: 12px;
         padding: 30px;
+        opacity: 0.95;
+        background-color:white
     }
     .container {
         justify-content: center;
@@ -123,6 +225,15 @@
 
 <template>
     <div class="body">
+        <div class="img1">
+            <img src="https://dbd-video-0.oss-cn-beijing.aliyuncs.com/img/%7BE7565D31-2FA8-4d8f-A5F4-0A22E195A04B%7D.png" alt="">
+        </div>
+        <div class="img2">
+            <img src="https://dbd-video-0.oss-cn-beijing.aliyuncs.com/img/%7BDE8D5BCB-4E8B-498d-A0AF-E60433D38445%7D.png" alt="">
+        </div>
+        <div class="img3">
+            <img src="https://dbd-video-0.oss-cn-beijing.aliyuncs.com/img/%7BBF6E6DB5-ED60-4269-8CB5-838EA31D55D8%7D.png" alt="">
+        </div>
         <div class="main-box">
             <div :class="['container', 'container-register', { 'is-login': isLogin }]">
                 <el-form
@@ -215,6 +326,8 @@ const Login = (formEl: FormInstance | undefined) => {
         })
         //token存入
         window.localStorage.setItem("optoken",res.data.data.token)
+        window.localStorage.setItem("opID",res.data.data.user.id);
+        // window.localStorage.setItem("opID","15");
         //跳转
         router.push("/home");
     }

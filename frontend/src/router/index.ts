@@ -6,6 +6,9 @@ import Ware from '../components/Ware.vue'
 import Area from '../components/Area.vue'
 import Self from '../components/Self.vue'
 import Cargo from '../components/Cargo.vue'
+import Goods from '../components/Goods.vue'
+import Stock from '../components/Stock.vue'
+import WorkList from '../components/WorkList.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -44,6 +47,21 @@ const router = createRouter({
           path: '/cargo',
           name: '/cargo',
           component: Cargo
+        },
+        {
+          path: '/goods',
+          name: '/goods',
+          component: Goods
+        },
+        {
+          path: '/stock',
+          name: '/stock',
+          component: Stock
+        },
+        {
+          path: '/worklist',
+          name: '/worklist',
+          component: WorkList
         },
       ]
     },

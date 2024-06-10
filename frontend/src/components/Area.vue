@@ -9,7 +9,7 @@
             </el-card>
         </div>
         <div style="width:74%;margin-left: 1%;margin-right: 5%;">
-            <el-card style="width: 100%">
+            <el-card style="width: 100%;height:480px;overflow-y: auto;">
                 <div>
                     <div style="float: left;">
                         <h4>当前仓库：{{ nowName }}</h4>

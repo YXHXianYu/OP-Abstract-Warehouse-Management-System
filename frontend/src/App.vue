@@ -6,11 +6,14 @@
         width: 100%;
         height: 100%;
     }
+    html, body {
+        height: 100%;
+    }
 </style>
 
 
 <template>
-  <router-view></router-view>
+  <router-view style="height: 100%;"></router-view>
 </template>
 
 <style scoped>
