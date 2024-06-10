@@ -648,10 +648,12 @@ interface Tree {
 const commitState=(formEl: FormInstance | undefined)=>{
     loading_3.value=true;
     var t;
-    if(nowItem.pickerUser==null)
+    if(nowItem.value.pickerUser==null)
         t = nowSelectID.value;
     else
-        t=nowItem.pickerUser.id;
+        t=nowItem.value.pickerUser.id;
+    console.log('233',nowItem)
+    // alert(t)
     axios.patch(`/in-out-orders/${Number(nowItem.value.id)}`, 
     { "state":Number(nowItem.value.state),"pickerUserId":t})
     .then(function (res) {
