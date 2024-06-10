@@ -14,12 +14,14 @@ public class MessageSender {
     @Autowired
     private KafkaTemplate<String, Object> kafkaTemplate;
 
-    public void addWaitMission(Long cargoID) {
+    public void addWaitMission(Long cargoID, Long ioID) {
         Map<String, Object> m = new HashMap<>();
         m.put("cargoID", cargoID);
+        m.put("ioID", ioID);
+        m.put("state", 2);
         //将m用fastjson转成json文本
         String message = JSON.toJSONString(m);
-
+        System.out.println("Send wait message: " + message);
         kafkaTemplate.send("wait", message);
     }
 

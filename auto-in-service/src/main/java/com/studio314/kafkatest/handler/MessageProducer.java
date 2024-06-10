@@ -15,7 +15,7 @@ public class MessageProducer {
     }
 
     public void sendAccomplishMessage(String message) {
-        kafkaTemplate.send("accomplish", message);
+        kafkaTemplate.send("accomplish-test", message);
     }
 
 }
