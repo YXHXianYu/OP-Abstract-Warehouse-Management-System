@@ -532,7 +532,7 @@
     const clickOn_2=()=>{
         //websocket建立
         timer.value=0;
-        socket = new WebSocket("ws://8.140.250.103:8081/webSocketServer/"+window.localStorage.getItem('opID')+"/"+nowItem.value.id);
+        socket = new WebSocket("ws://60.205.253.222:8080/webSocketServer/"+window.localStorage.getItem('opID')+"/"+nowItem.value.id);
         socket.onmessage = function (event) {
             console.log('JSON_from_websocket:',JSON.parse(event.data));
             if(timer.value==0 && !(Array.isArray(JSON.parse(event.data)))){return;}
